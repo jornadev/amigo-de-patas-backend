@@ -2,8 +2,8 @@ package com.uri.amigo_de_patas.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.BatchSize;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "usuarios")
@@ -12,8 +12,7 @@ import org.hibernate.annotations.BatchSize;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     private String nome;
 
@@ -21,4 +20,11 @@ public class User {
     private String email;
 
     private String senha;
+
+    @PrePersist
+    public void generateId() {
+        if (id == null) {
+            id = UUID.randomUUID();
+        }
+    }
 }
