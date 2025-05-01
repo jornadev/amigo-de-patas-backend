@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll()      //ta liberado o acesso de todo mundo, tem q dar um jeito de autenticar isso
                 );
 
         return http.build();
