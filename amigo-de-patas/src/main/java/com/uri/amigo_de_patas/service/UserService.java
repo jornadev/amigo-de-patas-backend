@@ -1,8 +1,10 @@
 package com.uri.amigo_de_patas.service;
 
 import com.uri.amigo_de_patas.dto.UserDTO;
+import com.uri.amigo_de_patas.model.Role;
 import com.uri.amigo_de_patas.model.User;
 import com.uri.amigo_de_patas.repository.UserRepository;
+import com.uri.amigo_de_patas.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,12 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     public User registerUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new IllegalArgumentException("Email já está em uso!");
+            throw new IllegalArgumentException("email já está em uso!");
         }
 
         User user = new User();
@@ -28,13 +33,17 @@ public class UserService {
         String encryptedPassword = passwordEncoder.encode(userDTO.getSenha());
         user.setSenha(encryptedPassword);
 
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.getRoles().add(Role.ROLE_USER);
+        }
+
         return userRepository.save(user);
     }
 
     public User authenticateUser(String email, String senha) {
         User user = userRepository.findByEmail(email);
 
-        if (user == null || !passwordEncoder.matches(senha, user.getSenha())) {  // Verifica se a senha fornecida é igual ao hash
+        if (user == null || !passwordEncoder.matches(senha, user.getSenha())) {
             throw new IllegalArgumentException("Email ou senha incorretos!");
         }
 

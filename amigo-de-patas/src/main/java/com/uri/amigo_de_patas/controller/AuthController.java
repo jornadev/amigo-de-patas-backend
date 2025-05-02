@@ -29,12 +29,12 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@RequestBody UserDTO userDTO) {
         try {
             User user = userService.authenticateUser(userDTO.getEmail(), userDTO.getSenha());
-            String token = jwtUtil.generateToken(user.getEmail());
+
+            String token = jwtUtil.generateToken(user);
 
             return ResponseEntity.ok(new LoginResponse(token));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
-
 }
