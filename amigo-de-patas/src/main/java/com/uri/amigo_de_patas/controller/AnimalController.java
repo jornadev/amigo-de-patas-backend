@@ -14,12 +14,12 @@ public class AnimalController {
     @Autowired
     private AnimalService animalService;
 
-    @PostMapping
+    @PostMapping("/create")
     public Animal cadastrarAnimal(@RequestBody Animal animal) {
         return animalService.cadastrar(animal);
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public List<Animal> listarAnimais() {
         return animalService.listarTodos();
     }
