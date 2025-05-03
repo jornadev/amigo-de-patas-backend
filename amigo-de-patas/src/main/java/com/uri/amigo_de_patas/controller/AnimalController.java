@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/animais")
@@ -22,5 +23,15 @@ public class AnimalController {
     @GetMapping("/list")
     public List<Animal> listarAnimais() {
         return animalService.listarTodos();
+    }
+
+    @PutMapping("/update/{id}")
+    public Animal atualizarAnimal(@PathVariable UUID id, @RequestBody Animal animal) {
+        return animalService.atualizar(id, animal);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deletarAnimal(@PathVariable UUID id) {
+        animalService.deletar(id);
     }
 }
