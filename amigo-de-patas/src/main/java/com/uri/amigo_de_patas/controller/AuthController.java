@@ -51,7 +51,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Não autenticado");
         }
 
-        // Pega as roles do usuário autenticado
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
