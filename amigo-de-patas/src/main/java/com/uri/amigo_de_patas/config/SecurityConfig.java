@@ -36,12 +36,11 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                       //.requestMatchers("/protected-test/**").hasRole("ADMIN")
                         .requestMatchers("/animais/create").hasRole("ADMIN")
-                        .requestMatchers("/animais/update/").hasRole("ADMIN")
-                        .requestMatchers("/animais/delete/").hasRole("ADMIN")
+                        .requestMatchers("/animais/update/**").hasRole("ADMIN")
+                        .requestMatchers("/animais/delete/**").hasRole("ADMIN")
                         .requestMatchers("/animais/list").permitAll()
+                        .requestMatchers("/animais/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
