@@ -8,6 +8,11 @@ import com.uri.amigo_de_patas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.http.HttpStatus;
+import java.util.Collection;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,9 +25,11 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
         userService.registerUser(userDTO);
-        return ResponseEntity.status(201).body("Usuário registrado com sucesso!");
+        return ResponseEntity.status(201).body(
+                java.util.Collections.singletonMap("message", "Usuário registrado com sucesso!")
+        );
     }
 
     @PostMapping("/login")
@@ -36,5 +43,22 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/check-role")
+    public ResponseEntity<?> checkRole(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Não autenticado");
+        }
+
+        // Pega as roles do usuário autenticado
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        String role = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(r -> r.equals("ROLE_ADMIN"))
+                .findFirst()
+                .orElse("ROLE_USER");
+
+        return ResponseEntity.ok(Map.of("role", role));
     }
 }
