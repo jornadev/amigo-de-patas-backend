@@ -25,4 +25,6 @@ public class Animal {
     private String imagemUrl;
     private boolean vacinado;
     private boolean castrado;
+    private boolean adotado;
+    private boolean lar_temporario;
 }
