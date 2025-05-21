@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/animais/delete/**").hasRole("ADMIN")
                         .requestMatchers("/animais/list").permitAll()
                         .requestMatchers("/animais/**").authenticated()
+                        .requestMatchers("/favoritos/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
