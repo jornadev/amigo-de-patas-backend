@@ -33,6 +33,7 @@ public class AnimalService {
             animalExistente.setVacinado(novoAnimal.isVacinado());
             animalExistente.setCastrado(novoAnimal.isCastrado());
             animalExistente.setLar_temporario(novoAnimal.isLar_temporario());
+            animalExistente.setAdotado(novoAnimal.isAdotado());
             return animalRepository.save(animalExistente);
         }).orElseThrow(() -> new RuntimeException("Animal não encontrado"));
     }
