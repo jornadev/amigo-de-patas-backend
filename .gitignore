@@ -1,2 +1,3 @@
 .idea/
 application-dev.properties
+amigo-de-patas/src/main/resources/application.properties
