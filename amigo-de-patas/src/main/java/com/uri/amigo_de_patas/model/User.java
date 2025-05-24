@@ -15,13 +15,12 @@ public class User {
 
     @Id
     private UUID id;
-
     private String nome;
-
     @Column(unique = true)
     private String email;
-
     private String senha;
+    private String telefone;
+    private String endereco;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
