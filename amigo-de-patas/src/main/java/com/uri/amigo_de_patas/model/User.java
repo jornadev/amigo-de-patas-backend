@@ -19,7 +19,9 @@ public class User {
     @Column(unique = true)
     private String email;
     private String senha;
+    @Column(nullable = false)
     private String telefone;
+    @Column(nullable = false)
     private String endereco;
 
     @ElementCollection(fetch = FetchType.EAGER)

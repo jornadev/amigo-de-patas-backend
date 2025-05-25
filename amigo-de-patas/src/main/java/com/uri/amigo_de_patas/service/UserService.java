@@ -29,9 +29,10 @@ public class UserService {
         User user = new User();
         user.setNome(userDTO.getNome());
         user.setEmail(userDTO.getEmail());
-
         String encryptedPassword = passwordEncoder.encode(userDTO.getSenha());
         user.setSenha(encryptedPassword);
+        user.setTelefone(userDTO.getTelefone());
+        user.setEndereco(userDTO.getEndereco());
 
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.getRoles().add(Role.ROLE_USER);
