@@ -60,4 +60,27 @@ public class AuthController {
 
         return ResponseEntity.ok(Map.of("role", role));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado");
+        }
+
+        String email = authentication.getName();
+
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+
+        UserDTO dto = new UserDTO();
+        dto.setNome(user.getNome());
+        dto.setEmail(user.getEmail());
+        dto.setTelefone(user.getTelefone());
+        dto.setEndereco(user.getEndereco());
+        dto.setUserImg(user.getUserImg());
+        return ResponseEntity.ok(dto);
+    }
+
 }
