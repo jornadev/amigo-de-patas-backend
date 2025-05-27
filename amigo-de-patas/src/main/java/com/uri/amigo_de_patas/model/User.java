@@ -23,6 +23,7 @@ public class User {
     private String telefone;
     @Column(nullable = false)
     private String endereco;
+    private String userImg;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))

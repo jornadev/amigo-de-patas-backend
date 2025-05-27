@@ -10,4 +10,5 @@ public class UserDTO {
     private String senha;
     private String telefone;
     private String endereco;
+    private String userImg;
 }
