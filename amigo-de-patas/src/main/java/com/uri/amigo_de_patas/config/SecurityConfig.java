@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/animais/list").permitAll()
                         .requestMatchers("/animais/**").authenticated()
                         .requestMatchers("/favoritos/**").authenticated()
+                        .requestMatchers("/applications/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
