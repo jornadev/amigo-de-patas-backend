@@ -22,6 +22,11 @@ public class AnimalService {
         return animalRepository.findAll();
     }
 
+    public Animal findById(UUID id) {
+        return animalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Animal não encontrado com id: " + id));
+    }
+
     public Animal atualizar(UUID id, Animal novoAnimal) {
         return animalRepository.findById(id).map(animalExistente -> {
             animalExistente.setNome(novoAnimal.getNome());
