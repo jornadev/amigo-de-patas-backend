@@ -47,7 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/animais/list").permitAll()
                         .requestMatchers("/animais/**").authenticated()
                         .requestMatchers("/favoritos/**").authenticated()
-                        .requestMatchers("/applications/**").authenticated()
+                        .requestMatchers("/applications").authenticated()
+                        .requestMatchers("/applications/*/approve").hasRole("ADMIN")
+                        .requestMatchers("/applications/*/reject").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

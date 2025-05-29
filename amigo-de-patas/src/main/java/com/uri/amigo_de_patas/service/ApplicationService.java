@@ -8,6 +8,9 @@ import com.uri.amigo_de_patas.model.User;
 import com.uri.amigo_de_patas.repository.ApplicationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class ApplicationService {
 
@@ -21,6 +24,10 @@ public class ApplicationService {
         this.applicationRepository = applicationRepository;
         this.userService = userService;
         this.animalService = animalService;
+    }
+
+    public List<Application> findAllApplications() {
+        return applicationRepository.findAll();
     }
 
     public Application createApplication(ApplicationDTO dto, String username) {
@@ -40,4 +47,12 @@ public class ApplicationService {
 
         return applicationRepository.save(application);
     }
+
+    public void updateStatus(UUID id, ApplicationStatus status) {
+        Application app = applicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("candidatura não encontrada"));
+        app.setStatus(status);
+        applicationRepository.save(app);
+    }
+
 }
