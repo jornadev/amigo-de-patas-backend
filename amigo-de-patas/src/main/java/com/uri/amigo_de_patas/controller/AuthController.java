@@ -83,4 +83,42 @@ public class AuthController {
         return ResponseEntity.ok(dto);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO dto, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado");
+        }
+
+        String email = authentication.getName();
+        try {
+            User updatedUser = userService.updateUserByEmail(email, dto);
+            UserDTO responseDTO = new UserDTO();
+            responseDTO.setNome(updatedUser.getNome());
+            responseDTO.setEmail(updatedUser.getEmail());
+            responseDTO.setTelefone(updatedUser.getTelefone());
+            responseDTO.setEndereco(updatedUser.getEndereco());
+            responseDTO.setUserImg(updatedUser.getUserImg());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado");
+        }
+
+        String email = authentication.getName();
+        try {
+            userService.deleteUserByEmail(email);
+            return ResponseEntity.ok(Map.of("message", "Usuário deletado com sucesso."));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
 }

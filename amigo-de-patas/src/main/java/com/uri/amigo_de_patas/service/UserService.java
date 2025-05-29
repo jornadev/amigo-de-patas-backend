@@ -45,7 +45,7 @@ public class UserService {
         User user = userRepository.findByEmail(email);
 
         if (user == null || !passwordEncoder.matches(senha, user.getSenha())) {
-            throw new IllegalArgumentException("Email ou senha incorretos!");
+            throw new IllegalArgumentException("email ou senha incorretos!");
         }
 
         return user;
@@ -54,4 +54,20 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    public User updateUserByEmail(String email, UserDTO dto) {
+        User user = userRepository.findByEmail(email);
+        user.setNome(dto.getNome());
+        user.setEndereco(dto.getEndereco());
+        user.setTelefone(dto.getTelefone());
+        user.setUserImg(dto.getUserImg());
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUserByEmail(String email){
+        User user = userRepository.findByEmail(email);
+        userRepository.delete(user);
+    }
+
 }
