@@ -104,21 +104,4 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não autenticado");
-        }
-
-        String email = authentication.getName();
-        try {
-            userService.deleteUserByEmail(email);
-            return ResponseEntity.ok(Map.of("message", "Usuário deletado com sucesso."));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-
 }
