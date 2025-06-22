@@ -5,6 +5,7 @@ import com.uri.amigo_de_patas.model.Animal;
 import com.uri.amigo_de_patas.model.Application;
 import com.uri.amigo_de_patas.model.ApplicationStatus;
 import com.uri.amigo_de_patas.model.User;
+import com.uri.amigo_de_patas.model.ApplicationType;
 import com.uri.amigo_de_patas.repository.ApplicationRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,25 @@ public class ApplicationService {
         return applicationRepository.findAll();
     }
 
+    public List<Application> findByUserEmail(String email) {
+        User user = userService.findByEmail(email);
+        return applicationRepository.findByUser(user);
+    }
+
+    public void deleteApplication(UUID id) {
+        applicationRepository.deleteById(id);
+    }
+
+
+
     public Application createApplication(ApplicationDTO dto, String username) {
         User user = userService.findByEmail(username);
         Animal animal = animalService.findById(dto.getAnimalId());
+
+        boolean exists = applicationRepository.existsByUserAndAnimalAndType(user, animal, dto.getType());
+        if (exists) {
+            throw new RuntimeException("Já existe uma candidatura para este animal e tipo.");
+        }
 
         Application application = new Application();
         application.setUser(user);
@@ -54,5 +71,4 @@ public class ApplicationService {
         app.setStatus(status);
         applicationRepository.save(app);
     }
-
 }

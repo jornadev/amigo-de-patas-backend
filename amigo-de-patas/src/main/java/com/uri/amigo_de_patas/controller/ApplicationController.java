@@ -1,6 +1,7 @@
 package com.uri.amigo_de_patas.controller;
 
 import com.uri.amigo_de_patas.dto.ApplicationDTO;
+import com.uri.amigo_de_patas.dto.ApplicationResponseDTO;
 import com.uri.amigo_de_patas.model.Application;
 import com.uri.amigo_de_patas.model.ApplicationStatus;
 import com.uri.amigo_de_patas.service.ApplicationService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/applications")
@@ -39,6 +41,30 @@ public class ApplicationController {
     })
     public ResponseEntity<List<Application>> listAll() {
         return ResponseEntity.ok(applicationService.findAllApplications());
+    }
+
+    @GetMapping("/my")
+    @Operation(summary = "Minhas candidaturas", description = "Lista as candidaturas do usuário autenticado")
+    public ResponseEntity<List<ApplicationResponseDTO>> minhasCandidaturas(@AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        List<Application> candidaturas = applicationService.findByUserEmail(email);
+        List<ApplicationResponseDTO> dtos = candidaturas.stream().map(ApplicationResponseDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/mine")
+    @Operation(summary = "Listar minhas candidaturas", description = "Retorna as candidaturas do usuário autenticado.")
+    public ResponseEntity<List<Application>> listMyApplications(@AuthenticationPrincipal UserDetails userDetails) {
+        List<Application> list = applicationService.findByUserEmail(userDetails.getUsername());
+        return ResponseEntity.ok(list);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Excluir candidatura", description = "Exclui uma candidatura (ADMIN).")
+    public ResponseEntity<?> deleteApplication(@PathVariable UUID id) {
+        applicationService.deleteApplication(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
